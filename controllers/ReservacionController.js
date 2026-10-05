@@ -2,14 +2,20 @@
 const { reservaciones } = require('../data/db');
 
 class ReservacionController {
-  // GET /reservaciones - Obtener todas las reservaciones
+
+
+
+
+
   static getAll(req, res) {
-    try {
-      res.json(reservaciones);
-    } catch (error) {
-      res.status(500).json({ error: "Error al obtener reservaciones: " + error.message });
-    }
+  try {
+    res.render('reservaciones', { reservaciones });
+  } catch (error) {
+    res.status(500).send("Error al cargar reservaciones: " + error.message);
   }
+}
+
+
 
   // GET /reservaciones/:id - Obtener una reservación por ID
   static getById(req, res) {

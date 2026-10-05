@@ -1,9 +1,10 @@
 const { salas } = require('../data/db');
 
 class SalaController {
+
   static getAll(req, res) {
     try {
-      res.json(salas);
+      res.render('salas', { salas });
     } catch (error) {
       res.status(500).json({ error: "Error al obtener las salas: " + error.message });
     }
@@ -20,6 +21,7 @@ class SalaController {
       res.status(500).json({ error: "Error al obtener la sala: " + error.message });
     }
   }
+
 
   static create(req, res) {
     try {

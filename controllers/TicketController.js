@@ -2,14 +2,18 @@
 const { tickets, funciones } = require('../data/db');
 
 class TicketController {
-  // GET /tickets - Obtener todos los tickets
-  static getAll(req, res) {
-    try {
-      res.json(tickets);
-    } catch (error) {
-      res.status(500).json({ error: "Error al obtener los tickets: " + error.message });
-    }
+
+
+
+
+ static getAll(req, res) {
+  try {
+    res.render('tickets', { tickets });
+  } catch (error) {
+    res.status(500).send("Error al cargar tickets: " + error.message);
   }
+}
+
 
   // GET /tickets/:id - Obtener un ticket por ID
   static getById(req, res) {

@@ -39,6 +39,22 @@ class FuncionController {
       res.status(500).json({ error: "Error al crear la función: " + error.message });
     }
   }
+
+
+static getAll(req, res) {
+  const funcionesDetalladas = funciones.map(f => {
+    const pelicula = peliculas.find(p => p.id === f.peliculaId);
+    const sala = salas.find(s => s.id === f.salaId);
+    return {
+      ...f,
+      pelicula: pelicula ? pelicula.titulo : "Desconocida",
+      sala: sala ? sala.nombre : "Desconocida"
+    };
+  });
+  res.render('funciones', { funciones: funcionesDetalladas });
+}
+
+
 }
 
 module.exports = FuncionController;
