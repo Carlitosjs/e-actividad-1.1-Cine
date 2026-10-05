@@ -3,11 +3,8 @@ const express = require('express');
 const router = express.Router();
 const PeliculaController = require('../controllers/PeliculaController');
 
-// Rutas asociadas a los métodos estáticos del controlador
 router.get('/', PeliculaController.getAll);
-router.get('/:id', PeliculaController.getById);
-router.post('/', PeliculaController.create);
-router.put('/:id', PeliculaController.update);
-router.delete('/:id', PeliculaController.delete);
+router.get('/nueva', PeliculaController.showCreateForm);
+router.post('/nueva', PeliculaController.create);
 
 module.exports = router;

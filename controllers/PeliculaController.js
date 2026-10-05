@@ -1,96 +1,64 @@
-// controllers/PeliculaController.js
 const { peliculas } = require('../data/db');
 
 class PeliculaController {
-  // GET /peliculas - Listar todas las películas
+  // GET /peliculas - Renderizar el listado de películas
   static getAll(req, res) {
+  try {
+    res.render('peliculas/index', { 
+      titulo: 'Listado de Películas', 
+      peliculas 
+    });
+  } catch (error) {
+    res.status(500).send("Error al cargar las películas: " + error.message);
+  }
+}
+
+  // GET /peliculas/nueva - Renderizar el formulario de creación
+  static showCreateForm(req, res) {
     try {
-      res.render('peliculas/index', { peliculas, titulo: 'Listado de Películas' });
+      res.render('peliculas/nueva-pelicula');
     } catch (error) {
-      res.status(500).send("Error al obtener las películas: " + error.message);
+      res.status(500).send("Error al cargar el formulario: " + error.message);
     }
   }
 
-  // GET /peliculas/:id - Obtener una película por ID 
-  static getById(req, res) {
-    try {
-      const id = parseInt(req.params.id);
-      const pelicula = peliculas.find(p => p.id === id);
-
-      if (!pelicula) {
-        return res.status(404).send("Película no encontrada");
-      }
-
-      res.render('peliculas/detail', { pelicula, titulo: pelicula.titulo });
-    } catch (error) {
-      res.status(500).send("Error al obtener la película: " + error.message);
-    }
-  }
-
-  // POST /peliculas - Crear una nueva película
+  // POST /peliculas/nueva - Procesar y guardar la nueva película
   static create(req, res) {
     try {
-      const { titulo, genero, duracion, fechaEstreno } = req.body;
+      const { titulo, genero, duracion, estreno } = req.body;
 
-      if (!titulo || !genero || !duracion || !fechaEstreno) {
-        return res.status(400).send("Todos los campos son obligatorios");
+      // Validación de campos obligatorios
+      if (!titulo || !genero || !duracion || !estreno) {
+        return res.status(400).send("Todos los campos son obligatorios.");
       }
+
+      // Generar ID autoincrementable
+      const nuevoId = peliculas.length > 0 ? peliculas[peliculas.length - 1].id + 1 : 1;
 
       const nuevaPelicula = {
-        id: peliculas.length > 0 ? peliculas[peliculas.length - 1].id + 1 : 1,
-        titulo,
+        id: nuevoId,
+        titulo: titulo.trim(),
         genero,
         duracion: parseInt(duracion),
-        fechaEstreno
+        fechaEstreno:estreno
       };
 
+      // Guardar en el arreglo en memoria
       peliculas.push(nuevaPelicula);
+
+      // Redireccionar al listado principal
       res.redirect('/peliculas');
     } catch (error) {
-      res.status(500).send("Error al crear la película: " + error.message);
+      res.status(500).send("Error al guardar la película: " + error.message);
     }
   }
 
-  // PUT /peliculas/:id - Actualizar una pelicula existente
-  static update(req, res) {
+  // API JSON - GET /peliculas/api
+  static getAllApi(req, res) {
     try {
-      const id = parseInt(req.params.id);
-      const index = peliculas.findIndex(p => p.id === id);
-
-      if (index === -1) {
-        return res.status(404).json({ error: "Película no encontrada" });
-      }
-
-      const { titulo, genero, duracion, fechaEstreno } = req.body;
-
-      peliculas[index] = {
-        ...peliculas[index],
-        titulo: titulo || peliculas[index].titulo,
-        genero: genero || peliculas[index].genero,
-        duracion: duracion ? parseInt(duracion) : peliculas[index].duracion,
-        fechaEstreno: fechaEstreno || peliculas[index].fechaEstreno
-      };
-
-      res.json({ mensaje: "Película actualizada con éxito", pelicula: peliculas[index] });
+      res.json(peliculas);
     } catch (error) {
-      res.status(500).json({ error: "Error al actualizar la película: " + error.message });
-    }
-  }
-
-  // DELETE /peliculas/:id - Eliminar una pelicula
-  static delete(req, res) {
-    try {
-      const id = parseInt(req.params.id);
-      const index = peliculas.findIndex(p => p.id === id);
-
-      if (index === -1) {
-        return res.status(404).json({ error: "Película no encontrada" });
-      }
-
-      peliculas.splice(index, 1);
-      res.json({ mensaje: "Película eliminada correctamente" });
-    } catch (error) {
-      res.status(500).json({ error: "Error al eliminar la película: " + error.message });
+      res.status(500).json({ error: "Error al obtener películas: " + error.message });
     }
   }
 }
