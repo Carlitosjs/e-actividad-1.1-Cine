@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= titulo %></title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; }
+    h1 { color: #333; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
+    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    th { background-color: #007bff; color: white; }
+    tr:nth-child(even) { background-color: #f2f2f2; }
+    .badge { background: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h1><%= titulo %></h1>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Género</th>
+        <th>Duración</th>
+        <th>Estreno</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% peliculas.forEach(pelicula => { %>
+        <tr>
+          <td><%= pelicula.id %></td>
+          <td><strong><%= pelicula.titulo %></strong></td>
+          <td><span class="badge"><%= pelicula.genero %></span></td>
+          <td><%= pelicula.duracion %> min</td>
+          <td><%= pelicula.fechaEstreno %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</body>
+</html>
