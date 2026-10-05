@@ -4,6 +4,10 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+const salasRouter = require('./routes/salas');
+const funcionesRouter = require('./routes/funciones');
+const ticketsRouter = require('./routes/tickets');
+const reservacionesRouter = require('./routes/reservacion');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -25,6 +29,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use('/salas', salasRouter);
+app.use('/funciones', funcionesRouter);
+app.use('/tickets', ticketsRouter);
+app.use('/reservaciones', reservacionesRouter);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
