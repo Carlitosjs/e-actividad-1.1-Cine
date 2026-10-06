@@ -1,76 +1,59 @@
-// controllers/ReservacionController.js
-const { reservaciones } = require('../data/db');
+const { reservaciones, funciones, peliculas } = require('../data/db');
 
 class ReservacionController {
-
-
-
-
-
+  // GET /reservaciones
   static getAll(req, res) {
-  try {
-    res.render('reservaciones', { reservaciones });
-  } catch (error) {
-    res.status(500).send("Error al cargar reservaciones: " + error.message);
-  }
-}
-
-
-
-  // GET /reservaciones/:id - Obtener una reservación por ID
-  static getById(req, res) {
-    try {
-      const id = parseInt(req.params.id);
-      const reservacion = reservaciones.find(r => r.id === id);
-
-      if (!reservacion) {
-        return res.status(404).json({ error: "Reservación no encontrada" });
-      }
-
-      res.json(reservacion);
-    } catch (error) {
-      res.status(500).json({ error: "Error al obtener la reservación: " + error.message });
-    }
+    res.render('reservaciones/reservaciones', {
+      titulo: 'Listado de Reservaciones',
+      reservaciones: reservaciones
+    });
   }
 
-  // POST /reservaciones - Crear una nueva reservación
-  static create(req, res) {
-    try {
-      const { ticketId, usuario, estado } = req.body;
-
-      if (!ticketId || !usuario) {
-        return res.status(400).json({ error: "Los campos ticketId y usuario son obligatorios" });
-      }
-
-      const nuevaReservacion = {
-        id: reservaciones.length > 0 ? reservaciones[reservaciones.length - 1].id + 1 : 1,
-        ticketId: parseInt(ticketId),
-        usuario,
-        estado: estado || "Confirmada"
+  // GET /reservaciones/nueva
+  static showCreateForm(req, res) {
+    const funcionesConDetalle = (funciones || []).map(f => {
+      const pelicula = (peliculas || []).find(p => p.id === f.peliculaId);
+      return {
+        ...f,
+        tituloPelicula: pelicula ? pelicula.titulo : `Función #${f.id}`
       };
+    });
 
-      reservaciones.push(nuevaReservacion);
-      res.status(201).json({ mensaje: "Reservación creada con éxito", reservacion: nuevaReservacion });
-    } catch (error) {
-      res.status(500).json({ error: "Error al crear la reservación: " + error.message });
-    }
+    res.render('reservaciones/crear-reservacion', {
+      titulo: 'Nueva Reservación',
+      funciones: funcionesConDetalle
+    });
   }
 
-  // DELETE /reservaciones/:id - Cancelar o eliminar una reservación
-  static delete(req, res) {
-    try {
-      const id = parseInt(req.params.id);
-      const index = reservaciones.findIndex(r => r.id === id);
+  // POST /reservaciones/nueva
+  static create(req, res) {
+    const { funcionId, usuario, ticketId, estado } = req.body;
 
-      if (index === -1) {
-        return res.status(404).json({ error: "Reservación no encontrada" });
-      }
+    if ((!funcionId && !ticketId) || !usuario) {
+      const funcionesConDetalle = (funciones || []).map(f => {
+        const pelicula = (peliculas || []).find(p => p.id === f.peliculaId);
+        return {
+          ...f,
+          tituloPelicula: pelicula ? pelicula.titulo : `Función #${f.id}`
+        };
+      });
 
-      reservaciones.splice(index, 1);
-      res.json({ mensaje: "Reservación eliminada con éxito" });
-    } catch (error) {
-      res.status(500).json({ error: "Error al eliminar la reservación: " + error.message });
+      return res.status(400).render('reservaciones/crear-reservacion', {
+        titulo: 'Nueva Reservación',
+        funciones: funcionesConDetalle,
+        error: 'Debe seleccionar una función/ticket e ingresar el nombre del cliente'
+      });
     }
+
+    const nuevaReservacion = {
+      id: reservaciones.length > 0 ? reservaciones[reservaciones.length - 1].id + 1 : 1,
+      ticketId: ticketId ? parseInt(ticketId) : parseInt(funcionId || 1),
+      usuario: usuario,
+      estado: estado || 'Pendiente'
+    };
+
+    reservaciones.push(nuevaReservacion);
+    res.redirect('/reservaciones');
   }
 }
 
