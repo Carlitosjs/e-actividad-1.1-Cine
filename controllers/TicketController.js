@@ -1,74 +1,70 @@
-// controllers/TicketController.js
-const { tickets, funciones } = require('../data/db');
+const { tickets, funciones, peliculas, salas } = require('../data/db');
 
 class TicketController {
+  // GET /tickets - Listar tickets con detalle de función, película y sala
+  static getAll(req, res) {
+    const ticketsConDetalle = tickets.map(t => {
+      const funcion = funciones.find(f => f.id == t.funcionId) || {};
+      const pelicula = peliculas.find(p => p.id == funcion.peliculaId);
+      const sala = salas.find(s => s.id == funcion.salaId);
 
-
-
-
- static getAll(req, res) {
-  try {
-    res.render('tickets', { tickets });
-  } catch (error) {
-    res.status(500).send("Error al cargar tickets: " + error.message);
-  }
-}
-
-
-  // GET /tickets/:id - Obtener un ticket por ID
-  static getById(req, res) {
-    try {
-      const id = parseInt(req.params.id);
-      const ticket = tickets.find(t => t.id === id);
-
-      if (!ticket) {
-        return res.status(404).json({ error: "Ticket no encontrado" });
-      }
-
-      res.json(ticket);
-    } catch (error) {
-      res.status(500).json({ error: "Error al obtener el ticket: " + error.message });
-    }
-  }
-
-  // POST /tickets - Generar un nuevo ticket
-  static create(req, res) {
-    try {
-      const { funcionId, asiento, precio } = req.body;
-
-      if (!funcionId || !asiento || !precio) {
-        return res.status(400).json({ error: "Los campos funcionId, asiento y precio son obligatorios" });
-      }
-
-      const nuevoTicket = {
-        id: tickets.length > 0 ? tickets[tickets.length - 1].id + 1 : 1,
-        funcionId: parseInt(funcionId),
-        asiento,
-        precio: parseFloat(precio)
+      return {
+        ...t,
+        peliculaNombre: pelicula ? pelicula.titulo : 'N/A',
+        salaNombre: sala ? sala.nombre : 'N/A',
+        fechaHora: funcion.fechaHora || 'N/A'
       };
+    });
 
-      tickets.push(nuevoTicket);
-      res.status(201).json({ mensaje: "Ticket generado con éxito", ticket: nuevoTicket });
-    } catch (error) {
-      res.status(500).json({ error: "Error al generar el ticket: " + error.message });
-    }
+    res.render('tickets/tickets', {
+      titulo: 'Listado de Tickets',
+      tickets: ticketsConDetalle
+    });
   }
 
-  // DELETE /tickets/:id - Eliminar un ticket
+  // GET /tickets/nuevo - Formulario para emitir nuevo ticket
+  static showCreateForm(req, res) {
+    const funcionesConDetalle = funciones.map(f => {
+      const pelicula = peliculas.find(p => p.id == f.peliculaId);
+      return {
+        ...f,
+        peliculaNombre: pelicula ? pelicula.titulo : 'Película'
+      };
+    });
+
+    res.render('tickets/crear-tickets', {
+      titulo: 'Nuevo Ticket',
+      funciones: funcionesConDetalle
+    });
+  }
+
+  // POST /tickets/nuevo - Guardar ticket
+  static create(req, res) {
+    const { funcionId, cliente, asiento, precio } = req.body;
+    const nuevoId = tickets.length ? tickets[tickets.length - 1].id + 1 : 1;
+
+    const nuevoTicket = {
+      id: nuevoId,
+      funcionId: Number(funcionId),
+      cliente,
+      asiento,
+      precio: Number(precio) || 0
+    };
+
+    tickets.push(nuevoTicket);
+    res.redirect('/tickets');
+  }
+
+  // POST /tickets/:id/eliminar - Cancelar/Eliminar ticket
   static delete(req, res) {
-    try {
-      const id = parseInt(req.params.id);
-      const index = tickets.findIndex(t => t.id === id);
+    const { id } = req.params;
+    const index = tickets.findIndex(t => t.id == id);
 
-      if (index === -1) {
-        return res.status(404).json({ error: "Ticket no encontrado" });
-      }
-
+    if (index !== -1) {
       tickets.splice(index, 1);
-      res.json({ mensaje: "Ticket eliminado con éxito" });
-    } catch (error) {
-      res.status(500).json({ error: "Error al eliminar el ticket: " + error.message });
     }
+
+    res.redirect('/tickets');
   }
 }
 
