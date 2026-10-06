@@ -10,8 +10,9 @@ const peliculas = [
 ];
 
 const salas = [
-  { id: 1, nombre: "Sala 3D VIP", capacidad: 50 },
-  { id: 2, nombre: "Sala IMAX", capacidad: 120 }
+  { id: 1, nombre: "Sala 3D VIP", capacidad: 50 , tipo:'3D' },
+  { id: 2, nombre: "Sala IMAX", capacidad: 120 , tipo:'IMAX' },
+  { id: 3, nombre: 'Sala IMAX', capacidad: 200, tipo: 'IMAX' }
 ];
 
 const funciones = [
@@ -24,8 +25,8 @@ const funciones = [
 ];
 
 const tickets = [
-  { id: 1, funcionId: 1, asiento: "A1", precio: 8.50 },
-  { id: 2, funcionId: 1, asiento: "A2", precio: 8.50 }
+  { id: 1, funcionId: 1, cliente: 'Carlos Valles', asiento: "A1", precio: 8.50 },
+  { id: 2, funcionId: 1, cliente: 'Angelo Huzz', asiento: "A2", precio: 8.50 }
 ];
 
 const reservaciones = [
