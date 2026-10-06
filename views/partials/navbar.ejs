@@ -1,10 +1,29 @@
-<nav style="background-color: #343a40; padding: 15px; margin-bottom: 20px;">
-  <div style="display: flex; gap: 20px; align-items: center;">
-    <strong style="color: #fff; font-size: 1.2em;">CineApp</strong>
-    <a href="/peliculas" style="color: #fff; text-decoration: none;">Películas</a>
-    <a href="/salas" style="color: #fff; text-decoration: none;">Salas</a>
-    <a href="/funciones" style="color: #fff; text-decoration: none;">Funciones</a>
-    <a href="/tickets" style="color: #fff; text-decoration: none;">Tickets</a>
-    <a href="/reservaciones" style="color: #fff; text-decoration: none;">Reservaciones</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-uppercase tracking-wide" href="/peliculas">
+       CineApp
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link <%= typeof titulo !== 'undefined' && titulo.includes('Película') ? 'active fw-bold text-primary' : '' %>" href="/peliculas">Peliculas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= typeof titulo !== 'undefined' && titulo.includes('Sala') ? 'active fw-bold text-primary' : '' %>" href="/salas">Salas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= typeof titulo !== 'undefined' && titulo.includes('Función') ? 'active fw-bold text-primary' : '' %>" href="/funciones">Funciones</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= typeof titulo !== 'undefined' && titulo.includes('Ticket') ? 'active fw-bold text-primary' : '' %>" href="/tickets">Tickets</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= typeof titulo !== 'undefined' && titulo.includes('Reservación') ? 'active fw-bold text-primary' : '' %>" href="/reservaciones">Reservaciones</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>
