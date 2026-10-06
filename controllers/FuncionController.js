@@ -2,21 +2,32 @@
 const { funciones, peliculas, salas } = require('../data/db');
 
 class FuncionController {
-  static getAll(req, res) {
-    try {
-      const funcionesDetalladas = funciones.map(f => {
-        const pelicula = peliculas.find(p => p.id === f.peliculaId);
-        const sala = salas.find(s => s.id === f.salaId);
-        return {
-          ...f,
-          pelicula: pelicula ? pelicula.titulo : "Desconocida",
-          sala: sala ? sala.nombre : "Desconocida"
-        };
-      });
-      res.json(funcionesDetalladas);
-    } catch (error) {
-      res.status(500).json({ error: "Error al obtener las funciones: " + error.message });
-    }
+
+
+ static getAll(req, res) {
+    const funcionesConDetalle = funciones.map(funcion => {
+      const pelicula = peliculas.find(p => p.id == funcion.peliculaId);
+      const sala = salas.find(s => s.id == funcion.salaId);
+      return {
+        ...funcion,
+        peliculaNombre: pelicula ? pelicula.titulo : (funcion.pelicula || 'N/A'),
+        salaNombre: sala ? sala.nombre : (funcion.sala || 'N/A')
+      };
+    });
+
+    res.render('funciones/funciones', {
+      titulo: 'Listado de Funciones',
+      funciones: funcionesConDetalle
+    });
+  }
+
+  // GET /funciones/nueva - Formulario para crear función
+  static showCreateForm(req, res) {
+    res.render('funciones/crear-funcion', {
+      titulo: 'Nueva Función',
+      peliculas,
+      salas
+    });
   }
 
   static create(req, res) {
@@ -34,27 +45,30 @@ class FuncionController {
       };
 
       funciones.push(nuevaFuncion);
+
+      res.redirect('/funciones');
+
       res.status(201).json({ mensaje: "Función programada con éxito", funcion: nuevaFuncion });
     } catch (error) {
       res.status(500).json({ error: "Error al crear la función: " + error.message });
     }
   }
 
+// POST /funciones/:id/eliminar - Eliminar función
+  static delete(req, res) {
+    const { id } = req.params;
+    const index = funciones.findIndex(f => f.id == id);
 
-static getAll(req, res) {
-  const funcionesDetalladas = funciones.map(f => {
-    const pelicula = peliculas.find(p => p.id === f.peliculaId);
-    const sala = salas.find(s => s.id === f.salaId);
-    return {
-      ...f,
-      pelicula: pelicula ? pelicula.titulo : "Desconocida",
-      sala: sala ? sala.nombre : "Desconocida"
-    };
-  });
-  res.render('funciones', { funciones: funcionesDetalladas });
-}
+    if (index !== -1) {
+      funciones.splice(index, 1);
+    }
 
+    res.redirect('/funciones');
+  }
 
 }
+
+
+
 
 module.exports = FuncionController;

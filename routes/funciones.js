@@ -3,6 +3,8 @@ const router = express.Router();
 const FuncionController = require('../controllers/FuncionController');
 
 router.get('/', FuncionController.getAll);
-router.post('/', FuncionController.create);
+router.get('/nueva', FuncionController.showCreateForm);
+router.post('/nueva', FuncionController.create);
+router.post('/:id/eliminar', FuncionController.delete);
 
 module.exports = router;
