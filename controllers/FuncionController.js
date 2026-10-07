@@ -1,5 +1,6 @@
 // controllers/FuncionController.js
-const { funciones, peliculas, salas } = require('../data/db');
+const db = require('../data/db');
+const { funciones, peliculas, salas } = db;
 
 class FuncionController {
 
@@ -94,4 +95,4 @@ class FuncionController {
 
 
 
-module.exports = FuncionController;
+module.exports = new FuncionController ();
