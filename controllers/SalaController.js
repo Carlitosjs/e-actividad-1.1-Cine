@@ -1,44 +1,77 @@
 const { salas } = require('../data/db');
 
 class SalaController {
-
+  // GET /salas - Listar todas las salas
   static getAll(req, res) {
-    try {
-      res.render('salas', { salas });
-    } catch (error) {
-      res.status(500).json({ error: "Error al obtener las salas: " + error.message });
-    }
+    res.render('salas/index', {
+      titulo: 'Listado de Salas',
+      salas
+    });
   }
 
-  static getById(req, res) {
-    try {
-      const id = parseInt(req.params.id);
-      const sala = salas.find(s => s.id === id);
-
-      if (!sala) return res.status(404).json({ error: "Sala no encontrada" });
-      res.json(sala);
-    } catch (error) {
-      res.status(500).json({ error: "Error al obtener la sala: " + error.message });
-    }
+  // GET /salas/nueva - Mostrar formulario para crear sala
+  static showCreateForm(req, res) {
+    res.render('salas/crear-salas', {
+      titulo: 'Nueva Sala'
+    });
   }
 
-
+  // POST /salas/nueva - Crear nueva sala
   static create(req, res) {
-    try {
-      const { nombre, capacidad } = req.body;
-      if (!nombre || !capacidad) return res.status(400).json({ error: "Nombre y capacidad son requeridos" });
+    const { nombre, capacidad, tipo } = req.body;
 
-      const nuevaSala = {
-        id: salas.length > 0 ? salas[salas.length - 1].id + 1 : 1,
-        nombre,
-        capacidad: parseInt(capacidad)
-      };
+    // Generar ID autoincremental
+    const nuevoId = salas.length ? salas[salas.length - 1].id + 1 : 1;
 
-      salas.push(nuevaSala);
-      res.status(201).json({ mensaje: "Sala creada con éxito", sala: nuevaSala });
-    } catch (error) {
-      res.status(500).json({ error: "Error al crear la sala: " + error.message });
+    const nuevaSala = {
+      id: nuevoId,
+      nombre,
+      capacidad: Number(capacidad),
+      tipo
+    };
+
+    salas.push(nuevaSala);
+    res.redirect('/salas');
+  }
+
+  // GET /salas/:id/editar - Mostrar formulario para editar sala
+  static showEditForm(req, res) {
+    const { id } = req.params;
+    const sala = salas.find(s => s.id == id);
+
+    if (!sala) return res.redirect('/salas');
+
+    res.render('salas/editar-salas', {
+      titulo: 'Editar Sala',
+      sala
+    });
+  }
+
+  // POST /salas/:id/editar - Actualizar sala existente
+  static update(req, res) {
+    const { id } = req.params;
+    const { nombre, capacidad, tipo } = req.body;
+
+    const sala = salas.find(s => s.id == id);
+    if (sala) {
+      sala.nombre = nombre;
+      sala.capacidad = Number(capacidad);
+      sala.tipo = tipo;
     }
+
+    res.redirect('/salas');
+  }
+
+  // POST /salas/:id/eliminar - Eliminar sala
+  static delete(req, res) {
+    const { id } = req.params;
+    const index = salas.findIndex(s => s.id == id);
+
+    if (index !== -1) {
+      salas.splice(index, 1);
+    }
+
+    res.redirect('/salas');
   }
 }
 

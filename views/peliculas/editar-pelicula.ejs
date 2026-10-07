@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar - <%= pelicula.titulo %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h1 class="mb-4">Editar Película</h1>
+
+      <form action="/peliculas/<%= pelicula.id %>/editar" method="POST">
+        <div class="mb-3">
+          <label for="titulo" class="form-label">Título:</label>
+          <input type="text" id="titulo" name="titulo" class="form-control" value="<%= pelicula.titulo %>" required>
+        </div>
+
+        
+                <div class="mb-3">
+        <label for="fechaEstreno" class="form-label">Fecha de Estreno:</label>
+        <input 
+            type="date" 
+            id="fechaEstreno" 
+            name="fechaEstreno" 
+            class="form-control" 
+            value="<%= pelicula.fechaEstreno || pelicula.estreno %>" 
+            required
+        >
+        </div>
+
+
+        <div class="mb-3">
+          <label for="genero" class="form-label">Género:</label>
+          <input type="text" id="genero" name="genero" class="form-control" value="<%= pelicula.genero %>" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="duracion" class="form-label">Duración (minutos):</label>
+          <input type="number" id="duracion" name="duracion" class="form-control" value="<%= pelicula.duracion %>" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Actualizar Película</button>
+        <a href="/peliculas" class="btn btn-secondary">Cancelar</a>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

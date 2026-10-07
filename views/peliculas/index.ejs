@@ -10,47 +10,49 @@
 
   <%- include('../partials/navbar') %>
 
-  <div class="container my-5">
-    <!-- Encabezado de sección con botón alineado -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="fw-bold m-0">Listado de Películas</h2>
-      <a href="/peliculas/nueva" class="btn btn-primary fw-bold">+ Nueva Película</a>
-    </div>
-
-    <!-- Tabla estilizada -->
-    <div class="card shadow-sm border-0">
-      <div class="card-body p-0">
-        <table class="table table-hover table-striped mb-0 align-middle">
-          <thead class="table-dark">
-            <tr>
-              <th>ID</th>
-              <th>Título</th>
-              <th>Género</th>
-              <th>Duración</th>
-              <th>Estreno</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if (peliculas && peliculas.length > 0) { %>
-              <% peliculas.forEach(pelicula => { %>
-                <tr>
-                  <td><%= pelicula.id %></td>
-                  <td class="fw-bold"><%= pelicula.titulo %></td>
-                  <td><span class="badge bg-success"><%= pelicula.genero %></span></td>
-                  <td><%= pelicula.duracion %> min</td>
-                  <td><%= pelicula.fechaEstreno || pelicula.estreno %></td>
-                </tr>
-              <% }) %>
-            <% } else { %>
-              <tr>
-                <td colspan="5" class="text-center py-4 text-muted">No hay películas registradas.</td>
-              </tr>
-            <% } %>
-          </tbody>
-        </table>
-      </div>
-    </div>
+ <div class="container my-5">
+  <!-- Encabezado de sección con botón alineado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold m-0">Listado de Películas</h2>
+    <a href="/peliculas/nueva" class="btn btn-primary fw-bold">+ Nueva Película</a>
   </div>
+
+  <table class="table table-striped table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Género</th>
+        <th>Duración</th>
+        <th>Estreno</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (peliculas && peliculas.length > 0) { %>
+        <% peliculas.forEach(pelicula => { %>
+          <tr>
+            <td><%= pelicula.id %></td>
+            <td class="fw-bold"><%= pelicula.titulo %></td>
+            <td><span class="badge bg-success"><%= pelicula.genero %></span></td>
+            <td><%= pelicula.duracion %> min</td>
+            <td><%= pelicula.fechaEstreno || pelicula.fecha || 'N/A' %></td>
+            <td class="text-center">
+              <a href="/peliculas/<%= pelicula.id %>/editar" class="btn btn-warning btn-sm me-1 text-white fw-bold">Editar</a>
+              <form action="/peliculas/<%= pelicula.id %>/eliminar" method="POST" class="d-inline" onsubmit="return confirm('¿Seguro que deseas eliminar esta película?');">
+                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="6" class="text-center py-4 text-muted">No hay películas registradas.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
 
   <%- include('../partials/footer') %>
 

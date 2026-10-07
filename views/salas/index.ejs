@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= titulo %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <%- include('../partials/navbar') %>
+
+  <div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="fw-bold"><%= titulo %></h1>
+      <a href="/salas/nueva" class="btn btn-primary fw-bold">+ Nueva Sala</a>
+    </div>
+
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Capacidad</th>
+          <th>Tipo / Formato</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <% if (salas && salas.length > 0) { %>
+          <% salas.forEach(sala => { %>
+            <tr>
+              <td><%= sala.id %></td>
+              <td class="fw-bold"><%= sala.nombre %></td>
+              <td><%= sala.capacidad %> asientos</td>
+              <td>
+                <span class="badge bg-info text-dark">
+                  <%= sala.tipo || sala.formato || '2D' %>
+                </span>
+              </td>
+              <td class="text-center">
+                <a href="/salas/<%= sala.id %>/editar" class="btn btn-warning btn-sm text-white fw-bold me-1">Editar</a>
+                <form action="/salas/<%= sala.id %>/eliminar" method="POST" class="d-inline" onsubmit="return confirm('¿Deseas eliminar esta sala?')">
+                  <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr>
+            <td colspan="5" class="text-center text-muted">No hay salas registradas.</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <%- include('../partials/footer') %>
+
+</body>
+</html>

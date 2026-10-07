@@ -30,6 +30,29 @@ class FuncionController {
     });
   }
 
+
+  update(req, res) {
+    const { id } = req.params;
+    
+    // Buscamos la función por ID en tu array de datos
+    const index = db.funciones.findIndex(f => f.id == id);
+
+    if (index === -1) {
+      return res.status(404).json({ error: 'Función no encontrada' });
+    }
+
+    // Actualizamos los datos (peliculaId, salaId, horario, precio, etc.)
+    db.funciones[index] = { 
+      ...db.funciones[index], 
+      ...req.body 
+    };
+
+    return res.status(200).json({
+      mensaje: 'Función actualizada con éxito',
+      funcion: db.funciones[index]
+    });
+  } 
+  
   static create(req, res) {
     try {
       const { peliculaId, salaId, fechaHora } = req.body;
