@@ -30,18 +30,24 @@
       <tbody>
         <% if (tickets && tickets.length > 0) { %>
           <% tickets.forEach(t => { %>
-            <tr>
-              <td><%= t.id %></td>
-              <td class="fw-bold"><%= t.cliente %></td>
-              <td><%= t.peliculaNombre %> (<%= t.salaNombre %>)</td>
-              <td><span class="badge bg-info text-dark"><%= t.asiento %></span></td>
-              <td class="fw-bold text-success">$<%= t.precio.toFixed(2) %></td>
-              <td class="text-center">
-                <form action="/tickets/<%= t.id %>/eliminar" method="POST" class="d-inline" onsubmit="return confirm('¿Deseas cancelar este ticket?')">
-                  <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
-                </form>
-              </td>
-            </tr>
+        <tr>
+            <td><%= t._id %></td>
+            <td class="fw-bold"><%= t.cliente %></td>
+            <td>
+              <% if (t.funcionId && t.funcionId.peliculaId && t.funcionId.salaId) { %>
+                <%= t.funcionId.peliculaId.titulo %> (<%= t.funcionId.salaId.nombre %>)
+              <% } else { %>
+                Información no disponible
+              <% } %>
+            </td>
+            <td><span class="badge bg-info text-dark"><%= t.asiento %></span></td>
+            <td><%= t.precio ? t.precio.toFixed(2) : '0.00' %></td>
+            <td class="text-center">
+              <form action="/tickets/<%= t._id %>/eliminar" method="POST" class="d-inline" onsubmit="return confirm('¿Deseas cancelar este ticket?')">
+                <button type="submit" class="btn btn-danger btn-sm">Cancelar</button>
+              </form>
+            </td>
+        </tr>
           <% }) %>
         <% } else { %>
           <tr>

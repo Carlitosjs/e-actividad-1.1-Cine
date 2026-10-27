@@ -1,70 +1,40 @@
-const { tickets, funciones, peliculas, salas } = require('../data/db');
+const Ticket = require('../models/Ticket');
 
 class TicketController {
-  // GET /tickets - Listar tickets con detalle de función, película y sala
-  static getAll(req, res) {
-    const ticketsConDetalle = tickets.map(t => {
-      const funcion = funciones.find(f => f.id == t.funcionId) || {};
-      const pelicula = peliculas.find(p => p.id == funcion.peliculaId);
-      const sala = salas.find(s => s.id == funcion.salaId);
-
-      return {
-        ...t,
-        peliculaNombre: pelicula ? pelicula.titulo : 'N/A',
-        salaNombre: sala ? sala.nombre : 'N/A',
-        fechaHora: funcion.fechaHora || 'N/A'
-      };
-    });
-
-    res.render('tickets/tickets', {
-      titulo: 'Listado de Tickets',
-      tickets: ticketsConDetalle
-    });
-  }
-
-  // GET /tickets/nuevo - Formulario para emitir nuevo ticket
-  static showCreateForm(req, res) {
-    const funcionesConDetalle = funciones.map(f => {
-      const pelicula = peliculas.find(p => p.id == f.peliculaId);
-      return {
-        ...f,
-        peliculaNombre: pelicula ? pelicula.titulo : 'Película'
-      };
-    });
-
-    res.render('tickets/crear-tickets', {
-      titulo: 'Nuevo Ticket',
-      funciones: funcionesConDetalle
-    });
-  }
-
-  // POST /tickets/nuevo - Guardar ticket
-  static create(req, res) {
-    const { funcionId, cliente, asiento, precio } = req.body;
-    const nuevoId = tickets.length ? tickets[tickets.length - 1].id + 1 : 1;
-
-    const nuevoTicket = {
-      id: nuevoId,
-      funcionId: Number(funcionId),
-      cliente,
-      asiento,
-      precio: Number(precio) || 0
-    };
-
-    tickets.push(nuevoTicket);
-    res.redirect('/tickets');
-  }
-
-  // POST /tickets/:id/eliminar - Cancelar/Eliminar ticket
-  static delete(req, res) {
-    const { id } = req.params;
-    const index = tickets.findIndex(t => t.id == id);
-
-    if (index !== -1) {
-      tickets.splice(index, 1);
+  // Agrega 'static' a todos los métodos
+  static async index(req, res) {
+    try {
+      const tickets = await Ticket.find().populate({
+        path: 'funcionId',
+        populate: [{ path: 'peliculaId' }, { path: 'salaId' }]
+      });
+      res.render('tickets/tickets', { tickets: tickets || [] ,titulo: 'Listado de Tickets'  });
+    } catch (error) {
+      res.status(500).send('Error al obtener los tickets: ' + error.message);
     }
+  }
 
-    res.redirect('/tickets');
+  static async showCreateForm(req, res) {
+    res.render('tickets/crear-ticket');
+  }
+
+  static async create(req, res) {
+    try {
+      const nuevoTicket = new Ticket(req.body);
+      await nuevoTicket.save();
+      res.redirect('/tickets');
+    } catch (error) {
+      res.status(500).send('Error al guardar el ticket: ' + error.message);
+    }
+  }
+
+  static async delete(req, res) {
+    try {
+      await Ticket.findByIdAndDelete(req.params.id);
+      res.redirect('/tickets');
+    } catch (error) {
+      res.status(500).send('Error al eliminar el ticket: ' + error.message);
+    }
   }
 }
 

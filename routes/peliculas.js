@@ -11,7 +11,6 @@ router.get('/ultimas', (req, res) => peliculaController.getUltimosCinco(req, res
 //  Rutas dinámicas GET para acciones web 
 router.get('/:id/editar', (req, res) => peliculaController.editView(req, res));
 router.post('/:id/eliminar', (req, res) => peliculaController.delete(req, res));
-router.get('/:id/eliminar', (req, res) => peliculaController.delete(req, res)); 
 router.get('/:id', (req, res) => peliculaController.getById(req, res));
 
 // Métodos HTTP para formulario y Thunder Client 
