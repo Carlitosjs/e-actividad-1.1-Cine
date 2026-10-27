@@ -12,7 +12,8 @@ const salasRouter = require('./routes/salas');
 const funcionesRouter = require('./routes/funciones');
 const ticketsRouter = require('./routes/tickets');
 const reservacionesRouter = require('./routes/reservacion'); // O rutas/reservaciones según el nombre de tu archivo
-
+const conectarDB = require('./data/db');
+conectarDB();
 const app = express();
 
 // 2. CONFIGURACIÓN DEL MOTOR DE VISTAS (EJS)
