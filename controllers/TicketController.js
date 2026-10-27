@@ -1,21 +1,46 @@
 const Ticket = require('../models/Ticket');
+const Funcion = require('../models/Funcion');
 
 class TicketController {
-  // Agrega 'static' a todos los métodos
-  static async index(req, res) {
+  
+ static async index(req, res) {
     try {
       const tickets = await Ticket.find().populate({
         path: 'funcionId',
-        populate: [{ path: 'peliculaId' }, { path: 'salaId' }]
+        populate: [
+          { path: 'peliculaId' },
+          { path: 'salaId' }
+        ]
       });
-      res.render('tickets/tickets', { tickets: tickets || [] ,titulo: 'Listado de Tickets'  });
+      
+      console.log('DATOS DE TICKETS:', tickets);
+
+      return res.render('tickets/tickets', { 
+        tickets: tickets || [], 
+        titulo: 'Listado de Tickets' 
+      });
+      
     } catch (error) {
-      res.status(500).send('Error al obtener los tickets: ' + error.message);
+      
+      return res.status(500).send('Error al obtener los tickets: ' + error.message);
     }
   }
 
   static async showCreateForm(req, res) {
-    res.render('tickets/crear-ticket');
+    try {
+      const funciones = await Funcion.find().populate({
+        path: 'peliculaId'
+      }).populate({
+        path: 'salaId'
+      });
+
+      return res.render('tickets/crear-tickets', { 
+        funciones: funciones || [],
+        titulo: 'Emitir Nuevo Ticket' 
+      });
+    } catch (error) {
+      return res.status(500).send('Error al cargar el formulario: ' + error.message);
+    }
   }
 
   static async create(req, res) {
