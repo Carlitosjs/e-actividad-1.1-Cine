@@ -23,15 +23,15 @@
         <label for="funcionId" class="form-label fw-semibold">Seleccionar Función / Película:</label>
         <select name="funcionId" id="funcionId" class="form-select" required>
           <option value="">-- Selecciona una Función --</option>
-          <% if (typeof funciones !== 'undefined' && funciones.length > 0) { %>
-            <% funciones.forEach(f => { %>
-              <option value="<%= f.id %>">
-                <%= f.tituloPelicula %> - Horario: <%= f.horario || 'Por definir' %>
-              </option>
-            <% }) %>
-          <% } else { %>
-            <option value="1">Función #1 - Película Principal</option>
-          <% } %>
+                  <% if (typeof funciones !== 'undefined' && funciones.length > 0) { %>
+          <% funciones.forEach(f => { %>
+            <option value="<%= f._id %>">
+              Película: <%= f.peliculaId ? f.peliculaId.titulo : 'N/A' %> - Sala: <%= f.salaId ? f.salaId.nombre : 'N/A' %> (<%= f.fechaHora || 'Sin fecha' %>)
+            </option>
+          <% }) %>
+        <% } else { %>
+          <option value="" disabled>No hay funciones disponibles</option>
+        <% } %>
         </select>
       </div>
 
@@ -44,6 +44,21 @@
       <!-- Estado de la Reservación -->
       <div class="mb-4">
         <label for="estado" class="form-label fw-semibold">Estado de Reservación:</label>
+
+      <!-- Selección de Ticket -->
+
+              <div class="mb-3">
+          <label for="ticketId" class="form-label fw-semibold">Ticket:</label>
+          <select name="ticketId" id="ticketId" class="form-select" required>
+            <option value="" disabled selected>-- Selecciona un Ticket --</option>
+            <% if (typeof tickets !== 'undefined' && tickets.length > 0) { %>
+              <% tickets.forEach(ticket => { %>
+                <option value="<%= ticket._id %>">Asiento: <%= ticket.asiento %> - Cliente: <%= ticket.cliente %></option>
+              <% }) %>
+            <% } %>
+          </select>
+        </div>
+
         <select name="estado" id="estado" class="form-select">
           <option value="Pendiente" selected>Pendiente</option>
           <option value="Confirmada">Confirmada</option>

@@ -1,3 +1,5 @@
+const Pelicula = require('../models/Pelicula');
+const Sala = require('../models/Sala');
 const Funcion = require('../models/Funcion');
 
 class FuncionController {
@@ -14,8 +16,19 @@ class FuncionController {
     }
   }
 
-  createView(req, res) {
-    res.render('funciones/crear-funcion');
+  async showCreateForm(req, res) {
+    try {
+      const peliculas = await Pelicula.find();
+      const salas = await Sala.find();
+
+      res.render('funciones/crear-funcion', { 
+        titulo: 'Crear Nueva Función',
+        peliculas: peliculas || [],
+        salas: salas || []
+      });
+    } catch (error) {
+      res.status(500).send('Error al cargar el formulario: ' + error.message);
+    }
   }
 
   async create(req, res) {

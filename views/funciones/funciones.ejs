@@ -29,17 +29,17 @@
       <tbody>
         <% if (funciones && funciones.length > 0) { %>
           <% funciones.forEach(funcion => { %>
-            <tr>
-              <td><%= funcion.id %></td>
-              <td class="fw-bold"><%= funcion.peliculaNombre %></td>
-              <td><span class="badge bg-secondary"><%= funcion.salaNombre %></span></td>
-              <td><%= (funcion.fechaHora || '').replace('T', ' - ') %></td>
-              <td class="text-center">
-                <form action="/funciones/<%= funcion.id %>/eliminar" method="POST" class="d-inline" onsubmit="return confirm('¿Deseas eliminar esta función?')">
-                  <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                </form>
-              </td>
-            </tr>
+             <tr class="text-start">
+                <td><%= funcion._id %></td>
+                <td class="fw-bold"><%= funcion.peliculaId ? funcion.peliculaId.titulo : 'N/A' %></td>
+                <td><span class="badge bg-secondary"><%= funcion.salaId ? funcion.salaId.nombre : 'N/A' %></span></td>
+                <td><%= (funcion.fechaHora || '').replace('T', ' - ') %></td>
+                <td class="text-center">
+                  <form action="/funciones/<%= funcion._id %>/eliminar" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                  </form>
+                </td>
+              </tr>
           <% }) %>
         <% } else { %>
           <tr>

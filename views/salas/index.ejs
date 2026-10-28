@@ -29,23 +29,22 @@
       
       <tbody>
         <% if (salas && salas.length > 0) { %>
-          <% salas.forEach(sala => { %>
+          <% salas.forEach((sala, index) => { %>
             <tr>
-              <td><%= sala.id %></td>
-              <td class="fw-bold"><%= sala.nombre %></td>
-              <td><%= sala.capacidad %> asientos</td>
-              <td>
-                <span class="badge bg-info text-dark">
-                  <%= sala.tipo || sala.formato || '2D' %>
-                </span>
-              </td>
-              <td class="text-center">
-                <a href="/salas/<%= sala.id %>/editar" class="btn btn-warning btn-sm text-white fw-bold me-1">Editar</a>
-                <form action="/salas/<%= sala.id %>/eliminar" method="POST" class="d-inline" onsubmit="return confirm('¿Deseas eliminar esta sala?')">
-                  <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                </form>
-              </td>
-            </tr>
+                    
+                    <td><%= index + 1 %></td> 
+                    <td><%= sala.nombre %></td>
+                    <td><%= sala.capacidad %> asientos</td>
+                    <td>
+                      <span class="badge bg-info"><%= sala.tipo %></span>
+                    </td>
+                    <td>
+                      <a href="/salas/<%= sala._id %>/editar" class="btn btn-warning btn-sm">Editar</a>
+                      <form action="/salas/<%= sala._id %>/eliminar" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                      </form>
+                    </td>
+                  </tr>
           <% }) %>
         <% } else { %>
           <tr>

@@ -1,23 +1,26 @@
+const Funcion = require('../models/Funcion');
+const Ticket = require('../models/Ticket');
 const Reservacion = require('../models/Reservacion');
 
 class ReservacionController {
+
   async index(req, res) {
     try {
-      const reservaciones = await Reservacion.find().populate({
-        path: 'ticketId',
-        populate: {
-          path: 'funcionId',
-          populate: [{ path: 'peliculaId' }, { path: 'salaId' }]
-        }
-      });
+      const reservaciones = await Reservacion.find().populate('ticketId');
       res.render('reservaciones/reservaciones', { reservaciones: reservaciones || [] });
     } catch (error) {
       res.status(500).send('Error al obtener las reservaciones: ' + error.message);
     }
   }
 
-  createView(req, res) {
-    res.render('reservaciones/crear-reservacion');
+  async createView(req, res) {
+    try {
+      const tickets = await Ticket.find();
+      const funciones = await Funcion.find().populate('peliculaId').populate('salaId'); // <--- Añade esto
+      res.render('reservaciones/crear-reservacion', { tickets, funciones }); // <--- Pásalo a la vista
+    } catch (error) {
+      res.status(500).send('Error al cargar el formulario: ' + error.message);
+    }
   }
 
   async create(req, res) {
@@ -26,9 +29,10 @@ class ReservacionController {
       await nuevaReservacion.save();
       res.redirect('/reservaciones');
     } catch (error) {
-      res.status(500).send('Error al guardar la reservación: ' + error.message);
+      res.status(500).send('Error al guardar la reservacion: ' + error.message);
     }
   }
+
 
   async delete(req, res) {
     try {

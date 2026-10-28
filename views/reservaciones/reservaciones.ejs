@@ -25,22 +25,35 @@
           <th>ID Ticket</th>
           <th>Usuario / Cliente</th>
           <th>Estado</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         <% if (reservaciones && reservaciones.length > 0) { %>
-          <% reservaciones.forEach(reser => { %>
-            <tr>
-              <td><%= reser.id %></td>
-              <td>Ticket #<%= reser.ticketId %></td>
-              <td class="fw-bold"><%= reser.usuario || reser.cliente %></td>
-              <td>
-                <span class="badge <%= reser.estado === 'Confirmada' ? 'bg-success' : 'bg-warning text-dark' %>">
-                  <%= reser.estado %>
-                </span>
-              </td>
-            </tr>
-          <% }) %>
+          <% reservaciones.forEach((reser,index) => { %>
+                <tr>
+                  <td><%= index+1 %></td>
+                  <td>
+                    <% if (reser.ticketId) { %>
+                      Asiento: <%= reser.ticketId.asiento %> - Cliente: <%= reser.ticketId.cliente %>
+                    <% } else { %>
+                      N/A
+                    <% } %>
+                  </td>
+                  <td class="fw-bold"><%= reser.usuario || reser.cliente %></td>
+                  <td>
+                    <span class="badge <%= reser.estado === 'Confirmada' ? 'bg-success' : 'bg-warning text-dark' %>">
+                      <%= reser.estado %>
+                    </span>
+                  </td>
+
+                  <td>
+                    <form action="/reservaciones/eliminar/<%= reser._id %>" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de eliminar esta reservación?');">
+                      <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
         <% } else { %>
           <tr>
             <td colspan="4" class="text-center text-muted">No hay reservaciones registradas.</td>
