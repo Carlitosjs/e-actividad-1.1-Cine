@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const peliculaController = require('../controllers/PeliculaController');
 
-//   Rutas específicas GET para vistas HTML web
+// Rutas Get
 router.get('/', (req, res) => peliculaController.index(req, res));
 router.get('/nueva', (req, res) => peliculaController.createView(req, res));
 router.get('/ultimas', (req, res) => peliculaController.getUltimosCinco(req, res));
