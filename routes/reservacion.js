@@ -26,7 +26,7 @@ router.get('/nueva', async (req, res) => {
         res.status(500).send('Error al cargar el formulario: ' + error.message);
     }
 });
-//Endpoints para API / Thunder Client (Filtros y Métodos HTTP)
+//Endpoints para API / Thunder Client 
 router.get('/ultimas', (req, res) => reservacionController.getUltimasCinco(req, res));
 router.get('/rango', (req, res) => reservacionController.getByRangoFecha(req, res));
 
