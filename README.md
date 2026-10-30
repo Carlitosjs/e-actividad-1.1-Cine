@@ -15,7 +15,7 @@ Características principales:
 - Interfaces dinámicas desarrolladas en EJS (Embedded JavaScript) 
   estilizadas con Bootstrap 5.
 
---- MANUAL DE USUARIO E INSTRUCCIONES DE INSTALACIÓN Y ARRANQUE
+-- MANUAL DE USUARIO E INSTRUCCIONES DE INSTALACIÓN Y ARRANQUE
 
 
 1. Clonar el repositorio:

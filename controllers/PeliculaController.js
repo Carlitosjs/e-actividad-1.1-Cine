@@ -45,7 +45,7 @@ class PeliculaController {
     try {
       const { id } = req.params;
       await Pelicula.findByIdAndUpdate(id, req.body);
-      res.redirect('/peliculas');
+      res.json({ mensaje: "Operación realizada con éxito" });;
     } catch (error) {
       res.status(500).send('Error al actualizar la película: ' + error.message);
     }
@@ -56,7 +56,7 @@ class PeliculaController {
     try {
       const { id } = req.params;
       await Pelicula.findByIdAndDelete(id);
-      res.redirect('/peliculas');
+      res.json({ mensaje: "Operación realizada con éxito" });;
     } catch (error) {
       res.status(500).send('Error al eliminar la película: ' + error.message);
     }
@@ -67,7 +67,7 @@ class PeliculaController {
     try {
       const { id } = req.params;
       const pelicula = await Pelicula.findById(id);
-      res.render('peliculas/detalle', { pelicula });
+      res.status(200).json(pelicula);
     } catch (error) {
       res.status(500).send('Error al obtener la película: ' + error.message);
     }
