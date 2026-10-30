@@ -6,7 +6,7 @@ const Reservacion = require('../models/Reservacion');
 const reservacionController = require('../controllers/ReservacionController');
 const db = require('../data/db');
 
-// 1. Vista principal en el navegador (Renderiza EJS)
+//  Vista principal en el navegador (Renderiza EJS)
 router.get('/', async (req, res) => {
     try {
         const reservaciones = await Reservacion.find().populate('ticketId').populate('funcionId');
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// 2. Vista del formulario de creación en el navegador (Renderiza EJS)
+//  Vista del formulario de creación en el navegador (Renderiza EJS)
 router.get('/nueva', async (req, res) => {
     try {
         const tickets = await Ticket.find();
@@ -26,7 +26,7 @@ router.get('/nueva', async (req, res) => {
         res.status(500).send('Error al cargar el formulario: ' + error.message);
     }
 });
-// 3. Endpoints para API / Thunder Client (Filtros y Métodos HTTP)
+//Endpoints para API / Thunder Client (Filtros y Métodos HTTP)
 router.get('/ultimas', (req, res) => reservacionController.getUltimasCinco(req, res));
 router.get('/rango', (req, res) => reservacionController.getByRangoFecha(req, res));
 

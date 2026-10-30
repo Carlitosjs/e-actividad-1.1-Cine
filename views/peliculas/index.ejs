@@ -30,9 +30,9 @@
     </thead>
     <tbody>
       <% if (peliculas && peliculas.length > 0) { %>
-        <% peliculas.forEach(pelicula => { %>
+        <% peliculas.forEach((pelicula,index) => { %>
           <tr>
-            <td><%= pelicula.id %></td>
+            <td><%= index+1 %></td>
             <td class="fw-bold"><%= pelicula.titulo %></td>
             <td><span class="badge bg-success"><%= pelicula.genero %></span></td>
             <td><%= pelicula.duracion %> min</td>

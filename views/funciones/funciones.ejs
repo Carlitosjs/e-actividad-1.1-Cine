@@ -28,9 +28,9 @@
       </thead>
       <tbody>
         <% if (funciones && funciones.length > 0) { %>
-          <% funciones.forEach(funcion => { %>
+          <% funciones.forEach((funcion , index) => { %>
              <tr class="text-start">
-                <td><%= funcion._id %></td>
+                <td><%= index+1 %></td>
                 <td class="fw-bold"><%= funcion.peliculaId ? funcion.peliculaId.titulo : 'N/A' %></td>
                 <td><span class="badge bg-secondary"><%= funcion.salaId ? funcion.salaId.nombre : 'N/A' %></span></td>
                 <td><%= (funcion.fechaHora || '').replace('T', ' - ') %></td>
