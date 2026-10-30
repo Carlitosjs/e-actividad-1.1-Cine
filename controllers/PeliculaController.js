@@ -30,7 +30,7 @@ class PeliculaController {
   }
 
   // 4. Mostrar formulario para EDITAR (GET)
-  async editView(req, res) {
+  async editView(req , res) {
     try {
       const { id } = req.params;
       const pelicula = await Pelicula.findById(id);
