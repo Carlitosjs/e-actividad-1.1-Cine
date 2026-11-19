@@ -4,34 +4,51 @@ const CategoriaController = {
   index: async (req, res) => {
     try {
       const categorias = await Categoria.find();
-      res.json(categorias);
+      res.render('categorias/index', { categorias, titulo: 'Categorías' });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).send(error.message);
     }
   },
+
+  createView: (req, res) => {
+    res.render('categorias/nueva', { titulo: 'Categorías' });
+  },
+
   create: async (req, res) => {
     try {
       const nueva = new Categoria(req.body);
       await nueva.save();
-      res.json({ mensaje: "Categoría creada con éxito", data: nueva });
+      res.redirect('/categorias');
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).send(error.message);
     }
   },
+
+  editView: async (req, res) => {
+    try {
+      const categoria = await Categoria.findById(req.params.id);
+      if (!categoria) return res.status(404).send('Categoría no encontrada');
+      res.render('categorias/editar', { categoria ,titulo: 'Categorías' });
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  },
+
   update: async (req, res) => {
     try {
-      const actualizada = await Categoria.findByIdAndUpdate(req.params.id, req.body, { new: true });
-      res.json({ mensaje: "Categoría actualizada con éxito", data: actualizada });
+      await Categoria.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      res.redirect('/categorias');
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).send(error.message);
     }
   },
+
   delete: async (req, res) => {
     try {
       await Categoria.findByIdAndDelete(req.params.id);
-      res.json({ mensaje: "Categoría eliminada con éxito" });
+      res.redirect('/categorias');
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).send(error.message);
     }
   }
 };

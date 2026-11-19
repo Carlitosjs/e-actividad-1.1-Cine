@@ -23,6 +23,15 @@
         <li class="nav-item">
           <a class="nav-link <%= typeof titulo !== 'undefined' && titulo.includes('Reservación') ? 'active fw-bold text-primary' : '' %>" href="/reservaciones">Reservaciones</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link <%= typeof titulo !== 'undefined' && titulo.includes('Categoría') ? 'active fw-bold' : '' %>" href="/categorias">Categorías</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= typeof titulo !== 'undefined' && titulo.includes('Método de Pago') ? 'active fw-bold' : '' %>" href="/metodos-pago">Métodos de Pago</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= typeof titulo !== 'undefined' && titulo.includes('Item') ? 'active fw-bold' : '' %>" href="/items-venta">Items de Venta</a>
+        </li>
       </ul>
     </div>
   </div>

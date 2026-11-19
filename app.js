@@ -5,6 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan'); 
 
 // 1. IMPORTACIÓN DE RUTAS
+const categoriasRouter = require('./routes/categorias');
+const metodosPagoRouter = require('./routes/metodosPago');
+const itemsVentaRouter = require('./routes/itemsVenta');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const peliculasRouter = require('./routes/peliculas');
@@ -35,6 +38,9 @@ app.use('/salas', salasRouter);
 app.use('/funciones', funcionesRouter);
 app.use('/tickets', ticketsRouter);
 app.use('/reservaciones', reservacionesRouter);
+app.use('/categorias', categoriasRouter);
+app.use('/metodos-pago', metodosPagoRouter);
+app.use('/items-venta', itemsVentaRouter);
 
 // 5. MANEJO DE ERRORES (404 Not Found y Error Handler)
 app.use(function(req, res, next) {
