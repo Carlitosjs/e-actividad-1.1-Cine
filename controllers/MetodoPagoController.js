@@ -4,34 +4,59 @@ const MetodoPagoController = {
   index: async (req, res) => {
     try {
       const metodos = await MetodoPago.find();
-      res.json(metodos);
+      res.render('metodos-pago/index', { metodos, titulo: 'Métodos de Pago' });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).send(error.message);
     }
   },
+
+  createView: (req, res) => {
+    res.render('metodos-pago/nueva', { titulo: 'Métodos de Pago' });
+  },
+
   create: async (req, res) => {
     try {
-      const nuevo = new MetodoPago(req.body);
+      const data = {
+        tipo: req.body.tipo,
+        activo: req.body.activo === 'on' || req.body.activo === true || req.body.activo === 'true'
+      };
+      const nuevo = new MetodoPago(data);
       await nuevo.save();
-      res.json({ mensaje: "Método de pago creado con éxito", data: nuevo });
+      res.redirect('/metodos-pago');
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).send(error.message);
     }
   },
+
+  editView: async (req, res) => {
+    try {
+      const metodo = await MetodoPago.findById(req.params.id);
+      if (!metodo) return res.status(404).send('Método de pago no encontrado');
+      res.render('metodos-pago/editar', { metodo, titulo: 'Métodos de Pago' });
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  },
+
   update: async (req, res) => {
     try {
-      const actualizado = await MetodoPago.findByIdAndUpdate(req.params.id, req.body, { new: true });
-      res.json({ mensaje: "Método de pago actualizado con éxito", data: actualizado });
+      const data = {
+        tipo: req.body.tipo,
+        activo: req.body.activo === 'on' || req.body.activo === true || req.body.activo === 'true'
+      };
+      await MetodoPago.findByIdAndUpdate(req.params.id, data, { new: true });
+      res.redirect('/metodos-pago');
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).send(error.message);
     }
   },
+
   delete: async (req, res) => {
     try {
       await MetodoPago.findByIdAndDelete(req.params.id);
-      res.json({ mensaje: "Método de pago eliminado con éxito" });
+      res.redirect('/metodos-pago');
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).send(error.message);
     }
   }
 };
