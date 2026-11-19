@@ -39,26 +39,45 @@ const MetodoPagoController = {
   },
 
   update: async (req, res) => {
-    try {
-      const data = {
-        tipo: req.body.tipo,
-        activo: req.body.activo === 'on' || req.body.activo === true || req.body.activo === 'true'
-      };
-      await MetodoPago.findByIdAndUpdate(req.params.id, data, { new: true });
-      res.redirect('/metodos-pago');
-    } catch (error) {
-      res.status(400).send(error.message);
+  try {
+    const data = {
+      tipo: req.body.tipo,
+      activo:
+        req.body.activo === 'on' ||
+        req.body.activo === true ||
+        req.body.activo === 'true'
+    };
+    const actualizado = await MetodoPago.findByIdAndUpdate(
+      req.params.id,
+      data,
+      { new: true }
+    );
+    if (!actualizado) {
+      return res.status(404).json({ error: 'Método de pago no encontrado' });
     }
-  },
-
-  delete: async (req, res) => {
-    try {
-      await MetodoPago.findByIdAndDelete(req.params.id);
-      res.redirect('/metodos-pago');
-    } catch (error) {
-      res.status(500).send(error.message);
+    if (req.method === 'PUT' || req.headers.accept?.includes('application/json')) {
+      return res.status(200).json({ mensaje: 'Método de pago actualizado con éxito', data: actualizado });
     }
+    res.redirect('/metodos-pago');
+  } catch (error) {
+    res.status(400).send(error.message);
   }
+},
+
+delete: async (req, res) => {
+  try {
+    const eliminado = await MetodoPago.findByIdAndDelete(req.params.id);
+    if (!eliminado) {
+      return res.status(404).json({ error: 'Método de pago no encontrado' });
+    }
+    if (req.method === 'DELETE' || req.headers.accept?.includes('application/json')) {
+      return res.status(200).json({ mensaje: 'Método de pago eliminado con éxito', id: req.params.id });
+    }
+    res.redirect('/metodos-pago');
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}
 };
 
 module.exports = MetodoPagoController;

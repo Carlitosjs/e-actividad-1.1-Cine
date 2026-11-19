@@ -39,30 +39,43 @@ const ItemVentaController = {
   },
 
   update: async (req, res) => {
-    try {
-      await ItemVenta.findByIdAndUpdate(
-        req.params.id,
-        {
-          nombre: req.body.nombre,
-          precio: Number(req.body.precio),
-          stock: Number(req.body.stock)
-        },
-        { new: true }
-      );
-      res.redirect('/items-venta');
-    } catch (error) {
-      res.status(400).send(error.message);
+  try {
+    const data = {
+      nombre: req.body.nombre,
+      precio: Number(req.body.precio),
+      stock: Number(req.body.stock)
+    };
+    const actualizado = await ItemVenta.findByIdAndUpdate(
+      req.params.id,
+      data,
+      { new: true }
+    );
+    if (!actualizado) {
+      return res.status(404).json({ error: 'Item de venta no encontrado' });
     }
-  },
-
-  delete: async (req, res) => {
-    try {
-      await ItemVenta.findByIdAndDelete(req.params.id);
-      res.redirect('/items-venta');
-    } catch (error) {
-      res.status(500).send(error.message);
+    if (req.method === 'PUT' || req.headers.accept?.includes('application/json')) {
+      return res.status(200).json({ mensaje: 'Item de venta actualizado con éxito', data: actualizado });
     }
+    res.redirect('/items-venta');
+  } catch (error) {
+    res.status(400).send(error.message);
   }
+},
+
+delete: async (req, res) => {
+  try {
+    const eliminado = await ItemVenta.findByIdAndDelete(req.params.id);
+    if (!eliminado) {
+      return res.status(404).json({ error: 'Item de venta no encontrado' });
+    }
+    if (req.method === 'DELETE' || req.headers.accept?.includes('application/json')) {
+      return res.status(200).json({ mensaje: 'Item de venta eliminado con éxito', id: req.params.id });
+    }
+    res.redirect('/items-venta');
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}
 };
 
 module.exports = ItemVentaController;
