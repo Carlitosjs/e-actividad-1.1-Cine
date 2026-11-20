@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/ItemVentaController');
+const { requerirRol } = require('../middleware/authRol');
 
 router.get('/', controller.index);
-router.get('/nueva', controller.createView);
-router.post('/nueva', controller.create);
-router.get('/:id/editar', controller.editView);
-router.post('/:id/editar', controller.update);
-router.post('/:id/eliminar', controller.delete);
-router.put('/:id', controller.update);
-router.delete('/:id', controller.delete);
+router.get('/nueva', requerirRol('admin'), controller.createView);
+router.post('/nueva', requerirRol('admin'), controller.create);
+router.get('/:id/editar', requerirRol('admin'), controller.editView);
+router.post('/:id/editar', requerirRol('admin'), controller.update);
+router.post('/:id/eliminar', requerirRol('admin'), controller.delete);
+router.put('/:id', requerirRol('admin'), controller.update);
+router.delete('/:id', requerirRol('admin'), controller.delete);
 
 module.exports = router;
