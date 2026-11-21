@@ -11,8 +11,8 @@ const CategoriaController = {
   },
 
   createView: (req, res) => {
-    res.render('categorias/nueva', { categorias, titulo: 'Categorías' });
-  },
+  res.render('categorias/nueva', { titulo: 'Nueva Categoría', categorias: [] });
+},
 
   create: async (req, res) => {
     try {
